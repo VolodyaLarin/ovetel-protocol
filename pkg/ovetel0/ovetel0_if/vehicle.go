@@ -1,4 +1,4 @@
-package ovetel0
+package ovetel0_if
 
 // Vehicle описывает информацию о транспортном средстве.
 type Vehicle struct {

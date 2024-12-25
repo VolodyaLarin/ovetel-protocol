@@ -1,4 +1,4 @@
-package ovetel0
+package ovetel0_if
 
 // Device описывает устройство, установленное на транспортное средство.
 type Device struct {

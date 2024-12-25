@@ -1,4 +1,4 @@
-package ovetel0
+package ovetel0_if
 
 // TelemetryFilter описывает общие параметры фильтра телеметрии.
 type TelemetryFilter struct {

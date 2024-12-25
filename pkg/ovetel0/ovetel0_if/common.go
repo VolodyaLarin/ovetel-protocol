@@ -1,4 +1,4 @@
-package ovetel0
+package ovetel0_if
 
 // DefaultResp описывает стандартный ответ.
 type DefaultResp struct {

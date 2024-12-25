@@ -2,7 +2,10 @@ module github.com/VolodyaLarin/ovetel-protocol
 
 go 1.23.1
 
-require github.com/go-bson/bson v0.0.0-20220508012449-fd785f6a88a5
+require (
+	github.com/go-bson/bson v0.0.0-20220508012449-fd785f6a88a5
+	github.com/pkg/errors v0.9.1
+)
 
 require (
 	gopkg.in/bson.v2 v2.0.0-20171018101713-d8c8987b8862 // indirect

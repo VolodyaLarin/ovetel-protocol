@@ -1,4 +1,4 @@
-package ovetel0
+package ovetel0_if
 
 // SendTelemetryReq описывает запрос на отправку телеметрии.
 type SendTelemetryReq struct {
