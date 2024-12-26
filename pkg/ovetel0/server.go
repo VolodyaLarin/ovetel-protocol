@@ -22,7 +22,7 @@ func (server *Server) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/vehicle", server.HandleVehicle)
 	mux.HandleFunc("/config", server.HandleConfig)
 	mux.HandleFunc("/changes", server.HandleChanges)
-	mux.HandleFunc("/sendtelemetry", server.HandleSendTelemetry)
+	mux.HandleFunc("/telemetry", server.HandleSendTelemetry)
 }
 
 func parseData[T interface{}](r *http.Request) (error, *ovetel0_if.Request[T]) {
@@ -30,7 +30,7 @@ func parseData[T interface{}](r *http.Request) (error, *ovetel0_if.Request[T]) {
 		return errors.New("not supported method"), nil
 	}
 
-	id := r.Header.Get("x-vehicle-id")
+	id := r.Header.Get(ovetel0_if.AuthHeader)
 	// @todo add validation
 
 	bytes, err := io.ReadAll(r.Body)

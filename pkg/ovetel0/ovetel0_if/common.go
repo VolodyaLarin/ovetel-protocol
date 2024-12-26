@@ -1,5 +1,7 @@
 package ovetel0_if
 
+const AuthHeader = "x-vehicle-id"
+
 // DefaultResp описывает стандартный ответ.
 type DefaultResp struct {
 	Status int     `bson:"status"`

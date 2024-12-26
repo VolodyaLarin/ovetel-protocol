@@ -5,7 +5,7 @@ type TelemetryFilter struct {
 	DeviceTypes []DeviceTypeEnum  `bson:"device_types"`
 	Vendor      *string           `bson:"vendor,omitempty"`
 	DataSource  *DataSourceEnum   `bson:"data_source,omitempty"`
-	Level       *int              `bson:"level,omitempty"`
+	Level       int               `bson:"level"`
 	Measurands  []MeasurandFilter `bson:"measurands,omitempty"`
 }
 
