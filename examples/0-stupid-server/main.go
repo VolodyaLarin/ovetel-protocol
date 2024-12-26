@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"github.com/VolodyaLarin/ovetel-protocol/pkg/ovetel0"
 	"github.com/VolodyaLarin/ovetel-protocol/pkg/ovetel0/ovetel0_if"
+	"golang.org/x/net/http2"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -61,13 +62,16 @@ func main() {
 		Addr:    ":8443",
 		Handler: mux,
 		TLSConfig: &tls.Config{
-			
+			NextProtos:       []string{"h2"}, // Указание на поддержку только HTTP/2
 			MinVersion:       tls.VersionTLS12,
 			CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 		},
 	}
 
 	slog.Info("Starting HTTP/2 server", "url", srv.Addr)
+
+	var http2Server = http2.Server{}
+	_ = http2.ConfigureServer(srv, &http2Server)
 
 	err := srv.ListenAndServeTLS(certFile, keyFile)
 	if err != nil {
