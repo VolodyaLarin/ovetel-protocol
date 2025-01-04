@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"context"
 	"github.com/VolodyaLarin/ovetel-protocol/pkg/ovetel0/ovetel0_if"
+	"github.com/VolodyaLarin/ovetel-protocol/pkg/ovetel0/ovetel0_uc"
 	"github.com/pkg/errors"
-	"gopkg.in/bson.v2"
+	"go.mongodb.org/mongo-driver/bson"
 	"io"
 	"log/slog"
 	"net/http"
@@ -17,6 +18,10 @@ const BsonContentType = "application/bson"
 type DefaultOvetel0Client struct {
 	httpClient *http.Client
 	baseUrl    url.URL
+}
+
+func NewDefaultOvetel0Client(baseUrl url.URL) ovetel0_uc.IClient {
+	return &DefaultOvetel0Client{httpClient: http.DefaultClient, baseUrl: baseUrl}
 }
 
 func (c *DefaultOvetel0Client) BaseUrl() url.URL {
@@ -48,6 +53,8 @@ func clientSendData[TIN interface{}, TOUT interface{}](ctx context.Context, c *D
 		return nil, errors.Wrap(errors.WithStack(err), "create request error")
 	}
 	req.Header.Set(ovetel0_if.AuthHeader, v.VehicleID)
+	req.Header.Set("Accept-Encoding", "")
+	req.Header.Set("Content-Type", "application/bson")
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -66,9 +73,18 @@ func clientSendData[TIN interface{}, TOUT interface{}](ctx context.Context, c *D
 		return nil, errors.Wrap(errors.WithStack(err), "read response body error")
 	}
 
+	if len(body) == 0 {
+		return nil, errors.New("empty response body")
+	}
+
 	var data TOUT
 
+	//slog.Info("incoming data", "body", string(body))
+
 	err = bson.Unmarshal(body, &data)
+
+	//slog.Info("incoming data", "data", data, "body", string(body))
+
 	if err != nil {
 		return nil, errors.Wrap(errors.WithStack(err), "can't parse body")
 	}

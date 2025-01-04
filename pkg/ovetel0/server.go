@@ -3,8 +3,8 @@ package ovetel0
 import (
 	"github.com/VolodyaLarin/ovetel-protocol/pkg/ovetel0/ovetel0_if"
 	"github.com/VolodyaLarin/ovetel-protocol/pkg/ovetel0/ovetel0_uc"
-	"github.com/go-bson/bson"
 	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson"
 	"io"
 	"log/slog"
 	"net/http"
@@ -39,6 +39,8 @@ func parseData[T interface{}](r *http.Request) (error, *ovetel0_if.Request[T]) {
 	}
 
 	var data T
+
+	//slog.Info("incoming data", "body", string(bytes))
 
 	err = bson.Unmarshal(bytes, &data)
 	if err != nil {

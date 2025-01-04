@@ -28,7 +28,7 @@ func (m *MockUsecase) GetConfig(ctx context.Context, o *ovetel0_if.Request[ovete
 	baseUrl, _ := url.Parse("https://localhost")
 	return &ovetel0_if.Config{
 		Endpoint:        *baseUrl,
-		TelemetryPeriod: 30,
+		TelemetryPeriod: 3,
 		Filters: []ovetel0_if.TelemetryFilter{{
 			DeviceTypes: []ovetel0_if.DeviceTypeEnum{ovetel0_if.EngineLoadDeviceType},
 			Vendor:      &vendor,
@@ -56,8 +56,8 @@ func main() {
 	mux := http.NewServeMux()
 	server.RegisterRoutes(mux)
 
-	certFile := "./examples/cert/cert.pem" // Путь к вашему сертификату
-	keyFile := "./examples/cert/key.pem"   // Путь к вашему приватному ключу
+	//certFile := "./examples/cert/cert.pem" // Путь к вашему сертификату
+	//keyFile := "./examples/cert/key.pem"   // Путь к вашему приватному ключу
 	srv := &http.Server{
 		Addr:    ":8443",
 		Handler: mux,
@@ -73,7 +73,8 @@ func main() {
 	var http2Server = http2.Server{}
 	_ = http2.ConfigureServer(srv, &http2Server)
 
-	err := srv.ListenAndServeTLS(certFile, keyFile)
+	//err := srv.ListenAndServeTLS(certFile, keyFile)
+	err := srv.ListenAndServe()
 	if err != nil {
 		slog.Error("error in server creation", "error", err)
 	}
