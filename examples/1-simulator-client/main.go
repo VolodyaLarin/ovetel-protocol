@@ -43,7 +43,7 @@ func main() {
 	httpClient := &http.Client{Transport: transport}
 
 	// Создаем клиент для взаимодействия с сервером
-	baseURL, _ := url.Parse("http://127.0.0.1:8443/")
+	baseURL, _ := url.Parse("http://172.28.1.2:8443/")
 	client := ovetel0.NewDefaultOvetel0Client(*baseURL)
 	client.SetHttpClient(httpClient)
 
@@ -69,7 +69,7 @@ func main() {
 	}
 
 	// Создаем и запускаем эмулятор
-	emulator := NewEmulator(client, vehicle)
+	emulator := NewSimulator(client, vehicle)
 	if err := emulator.Start(context.Background()); err != nil {
 		log.Fatalf("Failed to start emulator: %v", err)
 	}

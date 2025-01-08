@@ -53,7 +53,6 @@ func clientSendData[TIN interface{}, TOUT interface{}](ctx context.Context, c *D
 		return nil, errors.Wrap(errors.WithStack(err), "create request error")
 	}
 	req.Header.Set(ovetel0_if.AuthHeader, v.VehicleID)
-	req.Header.Set("Accept-Encoding", "")
 	req.Header.Set("Content-Type", "application/bson")
 
 	resp, err := c.httpClient.Do(req)

@@ -19,8 +19,8 @@ var (
 	ErrInvalidConfiguration = errors.New("invalid configuration received from server")
 )
 
-// Emulator представляет собой эмулятор телеметрии автомобиля.
-type Emulator struct {
+// Simulator представляет собой эмулятор телеметрии автомобиля.
+type Simulator struct {
 	client       ovetel0_uc.IClient
 	vehicle      *ovetel0_if.Vehicle
 	config       *ovetel0_if.Config
@@ -29,9 +29,9 @@ type Emulator struct {
 	wg           sync.WaitGroup
 }
 
-// NewEmulator создает новый экземпляр эмулятора.
-func NewEmulator(client ovetel0_uc.IClient, vehicle *ovetel0_if.Vehicle) *Emulator {
-	return &Emulator{
+// NewSimulator создает новый экземпляр эмулятора.
+func NewSimulator(client ovetel0_uc.IClient, vehicle *ovetel0_if.Vehicle) *Simulator {
+	return &Simulator{
 		client:       client,
 		vehicle:      vehicle,
 		telemetrySem: semaphore.NewWeighted(500),
@@ -40,20 +40,20 @@ func NewEmulator(client ovetel0_uc.IClient, vehicle *ovetel0_if.Vehicle) *Emulat
 }
 
 // Start запускает процесс эмуляции телеметрии.
-func (e *Emulator) Start(ctx context.Context) error {
+func (e *Simulator) Start(ctx context.Context) error {
 	e.wg.Add(1)
 	go e.run(ctx)
 	return nil
 }
 
 // Stop останавливает процесс эмуляции телеметрии.
-func (e *Emulator) Stop() {
+func (e *Simulator) Stop() {
 	close(e.stopCh)
 	e.wg.Wait()
 }
 
 // run выполняет основной цикл эмуляции телеметрии.
-func (e *Emulator) run(ctx context.Context) {
+func (e *Simulator) run(ctx context.Context) {
 	defer e.wg.Done()
 
 	slog.Info("Starts emulator")
@@ -89,7 +89,7 @@ func (e *Emulator) run(ctx context.Context) {
 }
 
 // sendVehicleTopology отправляет информацию о топологии автомобиля на сервер.
-func (e *Emulator) sendVehicleTopology(ctx context.Context) error {
+func (e *Simulator) sendVehicleTopology(ctx context.Context) error {
 	req := &ovetel0_if.Request[ovetel0_if.Vehicle]{
 		VehicleID: e.vehicle.ID,
 		Data:      *e.vehicle,
@@ -104,7 +104,7 @@ func (e *Emulator) sendVehicleTopology(ctx context.Context) error {
 }
 
 // getServerConfiguration получает конфигурацию от сервера.
-func (e *Emulator) getServerConfiguration(ctx context.Context) error {
+func (e *Simulator) getServerConfiguration(ctx context.Context) error {
 	req := &ovetel0_if.Request[ovetel0_if.DefaultReq]{}
 
 	config, err := e.client.GetConfig(ctx, req)
@@ -121,7 +121,7 @@ func (e *Emulator) getServerConfiguration(ctx context.Context) error {
 }
 
 // sendRandomTelemetry отправляет случайную телеметрию на сервер.
-func (e *Emulator) sendRandomTelemetry(ctx context.Context) error {
+func (e *Simulator) sendRandomTelemetry(ctx context.Context) error {
 	if err := e.telemetrySem.Acquire(ctx, 1); err != nil {
 		return err
 	}
