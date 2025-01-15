@@ -56,13 +56,13 @@ func main() {
 	mux := http.NewServeMux()
 	server.RegisterRoutes(mux)
 
-	//certFile := "./examples/cert/cert.pem" // Путь к вашему сертификату
-	//keyFile := "./examples/cert/key.pem"   // Путь к вашему приватному ключу
+	certFile := "./examples/cert/cert.pem" // Путь к вашему сертификату
+	keyFile := "./examples/cert/key.pem"   // Путь к вашему приватному ключу
 	srv := &http.Server{
 		Addr:    ":8443",
 		Handler: mux,
 		TLSConfig: &tls.Config{
-			NextProtos:       []string{"h2"}, // Указание на поддержку только HTTP/2
+			NextProtos:       []string{"h2"},
 			MinVersion:       tls.VersionTLS12,
 			CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 		},
@@ -73,8 +73,8 @@ func main() {
 	var http2Server = http2.Server{}
 	_ = http2.ConfigureServer(srv, &http2Server)
 
-	//err := srv.ListenAndServeTLS(certFile, keyFile)
-	err := srv.ListenAndServe()
+	err := srv.ListenAndServeTLS(certFile, keyFile)
+	//err := srv.ListenAndServe()
 	if err != nil {
 		slog.Error("error in server creation", "error", err)
 	}

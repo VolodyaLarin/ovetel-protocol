@@ -7,7 +7,7 @@ services:
     networks:
       bad-network:
         ipv4_address: 172.28.1.3
-    entrypoint: ["sh", "-c", "tc qdisc add dev eth0 root netem delay 500ms loss 50%; /app/client"]
+#    entrypoint: ["sh", "-c", "tc qdisc add dev eth0 root netem delay 500ms loss 50%; /app/client"]
 
   server:
     build:

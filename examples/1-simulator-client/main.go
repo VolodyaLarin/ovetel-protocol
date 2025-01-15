@@ -6,6 +6,7 @@ import (
 	"crypto/x509"
 	"github.com/VolodyaLarin/ovetel-protocol/pkg/ovetel0"
 	"github.com/VolodyaLarin/ovetel-protocol/pkg/ovetel0/ovetel0_if"
+	"golang.org/x/net/http2"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -37,13 +38,13 @@ func main() {
 	}
 
 	// Создаем транспорт с настроенной TLS-конфигурацией
-	transport := &http.Transport{TLSClientConfig: tlsConfig}
+	transport := &http2.Transport{TLSClientConfig: tlsConfig}
 
 	// Создаем HTTP-клиент с вашим транспортом
 	httpClient := &http.Client{Transport: transport}
 
 	// Создаем клиент для взаимодействия с сервером
-	baseURL, _ := url.Parse("http://172.28.1.2:8443/")
+	baseURL, _ := url.Parse("https://172.28.1.2:8443/")
 	client := ovetel0.NewDefaultOvetel0Client(*baseURL)
 	client.SetHttpClient(httpClient)
 
